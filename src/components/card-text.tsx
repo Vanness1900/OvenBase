@@ -29,18 +29,20 @@ const PIP_TITLE: Record<string, string> = {
   B: "Blue",
   P: "Purple",
   K: "Black",
-  N: "Colorless",
+  N: "Pure",
 };
 
 export function CostPips({ symbols }: { symbols: string[] }) {
   if (!symbols.length) return null;
   return (
-    <span className="mr-1 inline-flex align-middle">
+    // Evenly spaced instead of overlapping, so a run of pips fills the
+    // < > brackets the way it reads on the printed card.
+    <span className="mx-0.5 inline-flex items-center gap-[3px] align-middle">
       {symbols.map((s, i) => (
         <span
           key={i}
           title={PIP_TITLE[s] ?? s}
-          className="-ml-0.5 inline-block size-[13px] rounded-full ring-[1.5px] ring-inset ring-black/15 first:ml-0"
+          className="inline-block size-[13px] shrink-0 rounded-full ring-[1.5px] ring-inset ring-black/15"
           style={{ background: PIP_COLOR[s] ?? "var(--ob-colorless)" }}
         />
       ))}
@@ -106,7 +108,20 @@ function renderLine(line: string, keyPrefix: string): JSX.Element[] {
   return out;
 }
 
-export function CardText({ text, className }: { text: string | null; className?: string }) {
+export function CardText({
+  text,
+  className,
+  /**
+   * Renders spans instead of div/p. Needed wherever this sits inside a <p> --
+   * a block element nested in a paragraph is invalid HTML and the browser
+   * silently restructures it, which breaks hydration.
+   */
+  inline = false,
+}: {
+  text: string | null;
+  className?: string;
+  inline?: boolean;
+}) {
   if (!text) return null;
 
   // The dump pads text with runs of \r\n; collapse them into real paragraphs.
@@ -114,6 +129,19 @@ export function CardText({ text, className }: { text: string | null; className?:
     .split(/\n+/)
     .map((p) => p.trim())
     .filter(Boolean);
+
+  if (inline) {
+    return (
+      <span className={className}>
+        {paragraphs.map((p, i) => (
+          <span key={i}>
+            {i > 0 && " "}
+            {renderLine(p, `p${i}`)}
+          </span>
+        ))}
+      </span>
+    );
+  }
 
   return (
     <div className={className}>

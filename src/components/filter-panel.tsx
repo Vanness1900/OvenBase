@@ -5,6 +5,9 @@ import {
   COLOR_OPTIONS,
   COST_COLOR_OPTIONS,
   DAMAGE_OPTIONS,
+  EFFECT_DAMAGE_OPTIONS,
+  HEAL_OPTIONS,
+  REDUCTION_OPTIONS,
   EXCLUSIVE_OPTIONS,
   GROUP_OPTIONS,
   HP_OPTIONS,
@@ -13,12 +16,13 @@ import {
   LEVEL_OPTIONS,
   RARITY_OPTIONS,
   TYPE_OPTIONS,
+  attackDamageEnabled,
   hpPlusEnabled,
   levelHpEnabled,
   type CardFilters,
 } from "@/lib/filters";
 import type { CardType } from "@/lib/types";
-import { formatCount } from "@/lib/format";
+import { convert, formatMoney } from "@/lib/currency";
 
 const COLOR_SWATCH: Record<string, string> = {
   RED: "var(--ob-red)",
@@ -28,7 +32,6 @@ const COLOR_SWATCH: Record<string, string> = {
   PURPLE: "var(--ob-purple)",
   BLACK: "var(--ob-black)",
   PURE: "var(--ob-pure)",
-  COLORLESS: "var(--ob-colorless)",
 };
 
 interface Props {
@@ -40,10 +43,15 @@ interface Props {
 }
 
 export function FilterPanel({ filters, update, reset, products, maxPricePHP }: Props) {
-  const { t } = useSettings();
+  const { t, currency, rates } = useSettings();
 
   const levelHpOn = levelHpEnabled(filters.types);
   const hpPlusOn = hpPlusEnabled(filters.types);
+  const attackDamageOn = attackDamageEnabled(filters.types);
+
+  // The bounds are typed in the visitor's chosen currency; the conversion back
+  // to PHP happens where the filter runs.
+  const maxPriceInCurrency = convert(maxPricePHP, "PHP", currency, rates);
 
   const toggle = <T,>(list: T[], value: T): T[] =>
     list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
@@ -111,25 +119,61 @@ export function FilterPanel({ filters, update, reset, products, maxPricePHP }: P
           disabled={!levelHpOn}
           onToggle={(v) => update({ hp: toggle(filters.hp, Number(v)) })}
         />
-        <div className="mt-2">
-          <p className="mb-1.5 text-[11.5px] font-medium text-[var(--ob-text-faint)]">
-            {hpPlusOn ? "Extra modifiers" : t("filter.lockedToExtra")}
-          </p>
+        <SubBand
+          label="Extra HP"
+          disabled={!hpPlusOn}
+          note={!hpPlusOn ? t("filter.lockedToExtra") : undefined}
+        >
           <Chips
             options={HP_PLUS_OPTIONS.map((v) => ({ value: String(v), label: `+${v}` }))}
             selected={filters.hpPlus.map(String)}
             disabled={!hpPlusOn}
             onToggle={(v) => update({ hpPlus: toggle(filters.hpPlus, Number(v)) })}
           />
-        </div>
+        </SubBand>
       </Group>
 
       <Group label={t("filter.damage")}>
-        <Chips
-          options={DAMAGE_OPTIONS.map((v) => ({ value: String(v), label: String(v) }))}
-          selected={filters.damage.map(String)}
-          onToggle={(v) => update({ damage: toggle(filters.damage, Number(v)) })}
-        />
+        <SubBand
+          label={t("filter.attackDamage")}
+          disabled={!attackDamageOn}
+          note={!attackDamageOn ? t("filter.lockedToAttackers") : undefined}
+        >
+          <Chips
+            options={DAMAGE_OPTIONS.map((v) => ({ value: String(v), label: String(v) }))}
+            selected={filters.damage.map(String)}
+            disabled={!attackDamageOn}
+            onToggle={(v) => update({ damage: toggle(filters.damage, Number(v)) })}
+          />
+        </SubBand>
+
+        {/* Damage from effects rather than attacks, so it stays available for
+            Trap / Item / Stage. Includes HP moved to trash or bottom of deck. */}
+        <SubBand label={t("filter.effectDamage")}>
+          <Chips
+            options={[
+              ...EFFECT_DAMAGE_OPTIONS.map((v) => ({ value: `d${v}`, label: String(v) })),
+              ...HEAL_OPTIONS.map((v) => ({ value: `h${v}`, label: `+${v}` })),
+            ]}
+            selected={[
+              ...filters.effectDamage.map((v) => `d${v}`),
+              ...filters.heal.map((v) => `h${v}`),
+            ]}
+            onToggle={(v) => {
+              const n = Number(v.slice(1));
+              if (v.startsWith("h")) update({ heal: toggle(filters.heal, n) });
+              else update({ effectDamage: toggle(filters.effectDamage, n) });
+            }}
+          />
+        </SubBand>
+
+        <SubBand label={t("filter.trapEfficiency")}>
+          <Chips
+            options={REDUCTION_OPTIONS.map((v) => ({ value: String(v), label: `−${v}` }))}
+            selected={filters.damageReduction.map(String)}
+            onToggle={(v) => update({ damageReduction: toggle(filters.damageReduction, Number(v)) })}
+          />
+        </SubBand>
       </Group>
 
       <Group label={t("filter.keywords")}>
@@ -186,26 +230,27 @@ export function FilterPanel({ filters, update, reset, products, maxPricePHP }: P
           />
         </div>
         <p className="mt-1.5 text-[11.5px] text-[var(--ob-text-faint)]">
-          In PHP, the source currency. Highest tracked: ₱{formatCount(maxPricePHP)}
+          In {currency}. Highest tracked: {formatMoney(maxPriceInCurrency, currency)}
         </p>
       </Group>
 
-      <Group label="Show only">
+      <Group label="Show">
         <div className="space-y-1">
           <SwitchRow
             label={t("filter.hideDuplicates")}
             checked={filters.hideDuplicates}
             onChange={(v) => update({ hideDuplicates: v })}
           />
+          {/* On by default -- switching one off hides those cards entirely. */}
           <SwitchRow
             label={t("filter.showRestricted")}
-            checked={filters.restrictedOnly}
-            onChange={(v) => update({ restrictedOnly: v, bannedOnly: v ? false : filters.bannedOnly })}
+            checked={filters.showRestricted}
+            onChange={(v) => update({ showRestricted: v })}
           />
           <SwitchRow
             label={t("filter.showBanned")}
-            checked={filters.bannedOnly}
-            onChange={(v) => update({ bannedOnly: v, restrictedOnly: v ? false : filters.restrictedOnly })}
+            checked={filters.showBanned}
+            onChange={(v) => update({ showBanned: v })}
           />
         </div>
       </Group>
@@ -214,6 +259,27 @@ export function FilterPanel({ filters, update, reset, products, maxPricePHP }: P
 }
 
 /* ------------------------------------------------------------------ pieces */
+
+/** A labelled band inside a filter group, e.g. "Attack damage" under Damage. */
+function SubBand({
+  label,
+  children,
+  disabled,
+  note,
+}: {
+  label: string;
+  children: React.ReactNode;
+  disabled?: boolean;
+  note?: string;
+}) {
+  return (
+    <div className={`mt-2 first:mt-0 ${disabled ? "opacity-45" : ""}`}>
+      <p className="mb-1.5 text-[11.5px] font-medium text-[var(--ob-text-faint)]">{label}</p>
+      {children}
+      {note && <p className="mt-1 text-[11px] italic text-[var(--ob-text-faint)]">{note}</p>}
+    </div>
+  );
+}
 
 function Group({
   label,

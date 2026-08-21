@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useSettings } from "./settings-provider";
 import { DiscordIcon } from "./icons";
@@ -23,9 +24,15 @@ export function SiteFooter() {
       <div className="mx-auto max-w-[1400px] px-4 py-10 sm:px-6">
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-sm">
-            <div className="font-display text-[17px] font-black">
-              Oven<span className="text-[var(--ob-accent)]">Base</span>
-            </div>
+            <Image
+              src="/brand/wordmark-120.webp"
+              alt="OvenBase"
+              width={611}
+              height={120}
+              loading="lazy"
+              sizes="160px"
+              className="h-[30px] w-auto"
+            />
             <p className="mt-2 text-[13px] leading-relaxed text-[var(--ob-text-soft)]">
               A community price baseline for CookieRun: Braverse. Not affiliated with or endorsed by
               Devsisters Corp. Card images and data belong to their respective owners.

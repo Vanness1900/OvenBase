@@ -15,7 +15,11 @@ npm install
 npm run dev
 ```
 
-Then open http://localhost:3000.
+Then open http://localhost:3000. `Ctrl+C` stops the server.
+
+On Windows you can also just **double-click `start-dev.bat`** — it installs
+dependencies on first run, puts Node on the PATH itself (handy if your terminal
+was open before Node was installed), and leaves a window you can `Ctrl+C`.
 
 Requires Node 20+ (developed on 24.19).
 

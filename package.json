@@ -16,7 +16,8 @@
     "scrape:game-academia": "node scripts/scrape-game-academia.mjs",
     "scrape:tags": "node scripts/scrape-hitseekr-tags.mjs",
     "scrape:all": "npm run scrape:hitseekr && npm run scrape:tags && npm run scrape:agora && npm run scrape:game-academia",
-    "db:seed": "node scripts/seed-supabase.mjs"
+    "db:seed": "node scripts/seed-supabase.mjs",
+    "brand": "node scripts/build-brand.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",

@@ -1,6 +1,14 @@
 import type { Card, CardType } from "./types";
 
-export type SortKey = "default" | "level" | "rarity" | "hp" | "damage" | "priceLow" | "priceHigh";
+export type SortKey =
+  | "default"
+  | "newest"
+  | "level"
+  | "rarity"
+  | "hp"
+  | "damage"
+  | "priceLow"
+  | "priceHigh";
 
 export interface CardFilters {
   search: string;
@@ -14,6 +22,9 @@ export interface CardFilters {
   /** EXTRA-only "+N" HP modifiers, e.g. 2 for "+2". */
   hpPlus: number[];
   damage: number[];
+  effectDamage: number[];
+  heal: number[];
+  damageReduction: number[];
   keywords: string[];
   rarities: string[];
   groups: string[];
@@ -21,8 +32,10 @@ export interface CardFilters {
   priceMin: number | null;
   priceMax: number | null;
   hideDuplicates: boolean;
-  restrictedOnly: boolean;
-  bannedOnly: boolean;
+  /** When off, restricted cards are hidden from results. On by default. */
+  showRestricted: boolean;
+  /** When off, banned cards are hidden from results. On by default. */
+  showBanned: boolean;
   sort: SortKey;
 }
 
@@ -36,6 +49,9 @@ export const EMPTY_FILTERS: CardFilters = {
   hp: [],
   hpPlus: [],
   damage: [],
+  effectDamage: [],
+  heal: [],
+  damageReduction: [],
   keywords: [],
   rarities: [],
   groups: [],
@@ -43,8 +59,8 @@ export const EMPTY_FILTERS: CardFilters = {
   priceMin: null,
   priceMax: null,
   hideDuplicates: false,
-  restrictedOnly: false,
-  bannedOnly: false,
+  showRestricted: true,
+  showBanned: true,
   sort: "default",
 };
 
@@ -53,11 +69,14 @@ export const EMPTY_FILTERS: CardFilters = {
 /** Spec order, not data order -- these are the labels players expect. */
 export const TYPE_OPTIONS: CardType[] = ["COOKIE", "FLIP", "ITEM", "TRAP", "STAGE", "EXTRA"];
 export const COLOR_OPTIONS = ["RED", "YELLOW", "GREEN", "BLUE", "PURPLE", "BLACK", "PURE"];
-export const COST_COLOR_OPTIONS = ["RED", "YELLOW", "GREEN", "BLUE", "PURPLE", "BLACK", "COLORLESS"];
+export const COST_COLOR_OPTIONS = ["RED", "YELLOW", "GREEN", "BLUE", "PURPLE", "BLACK", "PURE"];
 export const LEVEL_OPTIONS = [1, 2, 3, 5];
 export const HP_OPTIONS = [1, 2, 3, 4, 5, 6];
-export const HP_PLUS_OPTIONS = [1, 2];
+export const HP_PLUS_OPTIONS = [0, 1, 2];
 export const DAMAGE_OPTIONS = [1, 2, 3, 4, 5, 7];
+export const EFFECT_DAMAGE_OPTIONS = [1, 2, 3, 4];
+export const HEAL_OPTIONS = [1, 2, 3];
+export const REDUCTION_OPTIONS = [1, 2, 3, 4];
 export const KEYWORD_OPTIONS = [
   "Skill",
   "Blocker",
@@ -102,6 +121,18 @@ export function levelHpEnabled(types: CardType[]): boolean {
   return types.some((t) => STATTED_TYPES.includes(t));
 }
 
+/**
+ * Only Cookies, Flips and Extras attack, so the attack-damage band greys out
+ * when the selection is limited to Trap / Item / Stage.
+ *
+ * Keywords deliberately never grey out: Equip appears only on Items, and
+ * Activate is common on Stages, so disabling them would hide real matches.
+ */
+export function attackDamageEnabled(types: CardType[]): boolean {
+  if (types.length === 0) return true;
+  return types.some((t) => STATTED_TYPES.includes(t));
+}
+
 export function hpPlusEnabled(types: CardType[]): boolean {
   if (types.length === 0) return true;
   return types.includes("EXTRA");
@@ -109,21 +140,59 @@ export function hpPlusEnabled(types: CardType[]): boolean {
 
 /* ------------------------------------------------------------- the filter */
 
+/**
+ * Everything a search should look at: name, numbers, and the full rules text
+ * including keywords, so typing "equip" finds every card with 【Equip】 rather
+ * than only cards with "equip" in their name.
+ *
+ * The blob is built once per card and cached -- recomputing it for 2,000 cards
+ * on every keystroke would be wasteful, and the cards array never mutates.
+ */
+const searchCache = new Map<string, string>();
+
+function searchBlob(c: Card): string {
+  const hit = searchCache.get(c.id);
+  if (hit !== undefined) return hit;
+
+  const blob = [
+    c.name,
+    c.id,
+    c.cardNo,
+    c.type,
+    c.rarity,
+    c.skillName,
+    c.skillText,
+    c.attackText,
+    c.flipText,
+    c.keywords.join(" "),
+    c.groups.join(" "),
+    c.productTitle,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    // Strip the cost/icon tokens ({R}, {da}, {sk}) so their letters can't
+    // produce phantom matches, but keep the words inside 【 】.
+    .replace(/\{[A-Za-z]+\}/g, " ")
+    .replace(/[【】<>]/g, " ")
+    .toLowerCase();
+
+  searchCache.set(c.id, blob);
+  return blob;
+}
+
 export function filterCards(cards: Card[], f: CardFilters): Card[] {
   const q = f.search.trim().toLowerCase();
   const levelHpOn = levelHpEnabled(f.types);
   const hpPlusOn = hpPlusEnabled(f.types);
+  const attackDamageOn = attackDamageEnabled(f.types);
 
   let out = cards.filter((c) => {
     if (f.hideDuplicates && !c.isPreferredPrinting) return false;
 
-    if (f.bannedOnly && c.legality !== "banned") return false;
-    if (f.restrictedOnly && c.legality !== "restricted") return false;
+    if (!f.showBanned && c.legality === "banned") return false;
+    if (!f.showRestricted && c.legality === "restricted") return false;
 
-    if (q) {
-      const hay = `${c.name ?? ""} ${c.id} ${c.cardNo} ${c.skillName ?? ""}`.toLowerCase();
-      if (!hay.includes(q)) return false;
-    }
+    if (q && !searchBlob(c).includes(q)) return false;
 
     if (f.products.length && (!c.productTitle || !f.products.includes(c.productTitle))) return false;
     if (f.types.length && !f.types.includes(c.type)) return false;
@@ -139,7 +208,11 @@ export function filterCards(cards: Card[], f: CardFilters): Card[] {
       if (!c.hp || !c.hp.plus || !f.hpPlus.includes(c.hp.value)) return false;
     }
 
-    if (f.damage.length && !f.damage.some((d) => c.damage.includes(d))) return false;
+    if (attackDamageOn && f.damage.length && !f.damage.some((d) => c.damage.includes(d))) return false;
+    if (f.effectDamage.length && !f.effectDamage.some((d) => c.effectDamage.includes(d))) return false;
+    if (f.heal.length && !f.heal.some((d) => c.heal.includes(d))) return false;
+    if (f.damageReduction.length && !f.damageReduction.some((d) => c.damageReduction.includes(d)))
+      return false;
 
     if (f.keywords.length) {
       const lower = c.keywords.map((k) => k.toLowerCase());
@@ -188,12 +261,15 @@ function sortCards(cards: Card[], sort: SortKey): Card[] {
       return arr.sort((a, b) => nullsLast(a.pricePHP) - nullsLast(b.pricePHP));
     case "priceHigh":
       return arr.sort((a, b) => (b.pricePHP ?? -1) - (a.pricePHP ?? -1));
-    case "default":
-    default:
-      // Newest first: the catalog's own creation date, then card number.
+    case "newest":
+      // When the card was added to the catalog, most recent first.
       return arr.sort(
         (a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? "") || b.cardNo.localeCompare(a.cardNo),
       );
+    case "default":
+    default:
+      // The official site's own ordering, preserved as the source array index.
+      return arr.sort((a, b) => a.sourceIndex - b.sourceIndex);
   }
 }
 
@@ -208,13 +284,17 @@ export function countActive(f: CardFilters): number {
   n += f.hp.length ? 1 : 0;
   n += f.hpPlus.length ? 1 : 0;
   n += f.damage.length ? 1 : 0;
+  n += f.effectDamage.length ? 1 : 0;
+  n += f.heal.length ? 1 : 0;
+  n += f.damageReduction.length ? 1 : 0;
   n += f.keywords.length ? 1 : 0;
   n += f.rarities.length ? 1 : 0;
   n += f.groups.length ? 1 : 0;
   n += f.exclusive.length ? 1 : 0;
   if (f.priceMin !== null || f.priceMax !== null) n++;
   if (f.hideDuplicates) n++;
-  if (f.restrictedOnly) n++;
-  if (f.bannedOnly) n++;
+  // These default to on, so only a switched-off toggle counts as a filter.
+  if (!f.showRestricted) n++;
+  if (!f.showBanned) n++;
   return n;
 }

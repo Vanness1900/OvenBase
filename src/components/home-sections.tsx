@@ -114,38 +114,49 @@ export function MetaDecks({ decks }: { decks: SeedDeck[] }) {
         </Link>
       </div>
 
-      <ol className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {/*
+        Five across on desktop, one row. On mobile that would squash to nothing,
+        so it becomes a 2x2 grid and the fifth deck drops out rather than
+        stranding one tile alone on a third row.
+      */}
+      <ol className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5 lg:gap-4">
         {decks.map((d, i) => (
-          <li key={d.id}>
+          <li key={d.id} className={i >= 4 ? "hidden lg:block" : undefined}>
             <Link
               href={`/decks/${d.id}`}
-              className="ob-card group flex items-center gap-3 overflow-hidden p-3 transition-shadow hover:shadow-[var(--ob-shadow-lg)]"
+              className="ob-card group flex h-full flex-col overflow-hidden transition-all hover:-translate-y-1 hover:shadow-[var(--ob-shadow-lg)]"
             >
-              <span className="font-display grid size-8 shrink-0 place-items-center rounded-full bg-[var(--ob-surface-2)] text-[13px] font-black text-[var(--ob-text-soft)]">
-                {i + 1}
-              </span>
+              <div className="relative aspect-[5/7] overflow-hidden bg-[var(--ob-surface-2)]">
+                {d.coverImage ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={d.coverImage}
+                    alt=""
+                    loading="lazy"
+                    className="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="grid size-full place-items-center text-[12px] text-[var(--ob-text-faint)]">
+                    No art
+                  </div>
+                )}
 
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-[14.5px] font-semibold">{d.name}</p>
-                <p className="mt-0.5 truncate text-[12.5px] text-[var(--ob-text-soft)]">
-                  {d.authorName} · {t("decks.cards", { n: d.cardCount })}
-                </p>
+                <span className="font-display absolute left-2 top-2 grid size-7 place-items-center rounded-full bg-[var(--ob-text)]/85 text-[12px] font-black text-[var(--ob-bg)] backdrop-blur-sm">
+                  {i + 1}
+                </span>
+
+                <span className="absolute right-2 top-2 flex items-center gap-1 rounded-full bg-[var(--ob-text)]/85 px-2 py-0.5 text-[11px] font-semibold text-[var(--ob-bg)] backdrop-blur-sm">
+                  <HeartIcon className="size-3" />
+                  {d.likes}
+                </span>
               </div>
 
-              <span className="flex shrink-0 items-center gap-1 text-[12.5px] text-[var(--ob-text-faint)]">
-                <HeartIcon className="size-3.5" />
-                {d.likes}
-              </span>
-
-              {d.coverImage && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={d.coverImage}
-                  alt=""
-                  loading="lazy"
-                  className="h-14 w-10 shrink-0 rounded-[7px] object-cover"
-                />
-              )}
+              <div className="flex flex-1 flex-col gap-0.5 p-3">
+                <p className="line-clamp-2 text-[13.5px] font-semibold leading-snug">{d.name}</p>
+                <p className="mt-auto truncate pt-1 text-[12px] text-[var(--ob-text-soft)]">
+                  {d.authorName}
+                </p>
+              </div>
             </Link>
           </li>
         ))}

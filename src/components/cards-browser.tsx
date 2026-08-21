@@ -4,9 +4,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSettings } from "./settings-provider";
 import { FilterPanel } from "./filter-panel";
 import { CardModal } from "./card-modal";
+import { Dropdown } from "./dropdown";
 import { PriceTag } from "./home-sections";
 import { SearchIcon } from "./icons";
 import { countActive, EMPTY_FILTERS, filterCards, type CardFilters, type SortKey } from "@/lib/filters";
+import { priceBoundsToPhp } from "@/lib/currency";
 import { CURRENCIES, STORES, type Card, type CurrencyCode, type StoreId } from "@/lib/types";
 import type { MessageKey } from "@/lib/i18n";
 import { formatCount } from "@/lib/format";
@@ -15,6 +17,7 @@ const PAGE_SIZE = 60;
 
 const SORTS: { value: SortKey; key: MessageKey }[] = [
   { value: "default", key: "sort.default" },
+  { value: "newest", key: "sort.newest" },
   { value: "level", key: "sort.level" },
   { value: "rarity", key: "sort.rarity" },
   { value: "hp", key: "sort.hp" },
@@ -32,7 +35,7 @@ export function CardsBrowser({
   products: string[];
   maxPricePHP: number;
 }) {
-  const { t, currency, setCurrency, store, setStore } = useSettings();
+  const { t, currency, setCurrency, store, setStore, rates } = useSettings();
 
   const [filters, setFilters] = useState<CardFilters>(EMPTY_FILTERS);
   const [searchDraft, setSearchDraft] = useState("");
@@ -57,7 +60,13 @@ export function CardsBrowser({
     setVisible(PAGE_SIZE);
   }, []);
 
-  const results = useMemo(() => filterCards(cards, filters), [cards, filters]);
+  // Price bounds are entered in the visitor's currency; the catalog stores PHP.
+  const effectiveFilters = useMemo(() => {
+    const { min, max } = priceBoundsToPhp(filters.priceMin, filters.priceMax, currency, rates);
+    return { ...filters, priceMin: min, priceMax: max };
+  }, [filters, currency, rates]);
+
+  const results = useMemo(() => filterCards(cards, effectiveFilters), [cards, effectiveFilters]);
   const shown = results.slice(0, visible);
   const activeCount = countActive(filters);
 
@@ -72,12 +81,14 @@ export function CardsBrowser({
             value={store}
             onChange={(v) => setStore(v as StoreId)}
             options={STORES.map((s) => ({ value: s.id, label: s.label }))}
+            align="end"
           />
           <Dropdown
             label={t("cards.currency")}
             value={currency}
             onChange={(v) => setCurrency(v as CurrencyCode)}
             options={CURRENCIES.map((c) => ({ value: c.code, label: c.label }))}
+            align="end"
           />
         </div>
       </div>
@@ -188,7 +199,11 @@ export function CardsBrowser({
         </div>
       )}
 
-      {active && <CardModal card={active} allCards={cards} onClose={() => setActive(null)} />}
+      {/* Keyed so opening a different card gets a fresh modal rather than
+          carrying over the previously selected printing. */}
+      {active && (
+        <CardModal key={active.id} card={active} allCards={cards} onClose={() => setActive(null)} />
+      )}
     </div>
   );
 }
@@ -233,48 +248,5 @@ function CardTile({ card, onOpen }: { card: Card; onOpen: () => void }) {
         </p>
       </div>
     </button>
-  );
-}
-
-/* ---------------------------------------------------------------- dropdown */
-
-function Dropdown({
-  label,
-  value,
-  onChange,
-  options,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  options: { value: string; label: string }[];
-}) {
-  return (
-    <label className="relative inline-flex h-11 items-center rounded-full border border-[var(--ob-line)] bg-[var(--ob-surface)] pl-3.5 pr-8 transition-colors focus-within:border-[var(--ob-accent)]">
-      <span className="sr-only">{label}</span>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="cursor-pointer appearance-none bg-transparent text-[13.5px] font-semibold outline-none"
-      >
-        {options.map((o) => (
-          <option key={o.value} value={o.value}>
-            {o.label}
-          </option>
-        ))}
-      </select>
-      <svg
-        viewBox="0 0 24 24"
-        aria-hidden
-        className="pointer-events-none absolute right-3 size-3.5 text-[var(--ob-text-faint)]"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M6 9l6 6 6-6" />
-      </svg>
-    </label>
   );
 }

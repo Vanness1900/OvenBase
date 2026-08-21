@@ -18,6 +18,7 @@ import {
   type DeckSlot,
   type DeckState,
 } from "@/lib/deck";
+import { priceBoundsToPhp } from "@/lib/currency";
 import { usePersistentString } from "@/lib/persistent";
 import { EXTRA_DECK_MAX, MAIN_DECK_SIZE, type Card } from "@/lib/types";
 
@@ -57,7 +58,7 @@ export function DeckBuilder({
   products: string[];
   maxPricePHP: number;
 }) {
-  const { t } = useSettings();
+  const { t, currency, rates } = useSettings();
 
   const [tab, setTab] = useState<Tab>("select");
   const [filters, setFilters] = useState<CardFilters>(EMPTY_FILTERS);
@@ -124,7 +125,12 @@ export function DeckBuilder({
     setSearchDraft("");
   }, []);
 
-  const results = useMemo(() => filterCards(cards, filters), [cards, filters]);
+  const effectiveFilters = useMemo(() => {
+    const { min, max } = priceBoundsToPhp(filters.priceMin, filters.priceMax, currency, rates);
+    return { ...filters, priceMin: min, priceMax: max };
+  }, [filters, currency, rates]);
+
+  const results = useMemo(() => filterCards(cards, effectiveFilters), [cards, effectiveFilters]);
   const legality = useMemo(() => checkLegality(deck, index), [deck, index]);
 
   const mainCount = totalCards(deck.main);

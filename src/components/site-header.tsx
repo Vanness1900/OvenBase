@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -29,8 +30,16 @@ export function SiteHeader() {
   return (
     <header className="ob-blur sticky top-0 z-50 border-b border-[var(--ob-line)]">
       <div className="mx-auto flex h-14 max-w-[1400px] items-center gap-3 px-4 sm:px-6">
-        <Link href="/" className="font-display shrink-0 text-[17px] font-black tracking-tight">
-          Oven<span className="text-[var(--ob-accent)]">Base</span>
+        <Link href="/" className="shrink-0" aria-label="OvenBase — home">
+          <Image
+            src="/brand/wordmark-120.webp"
+            alt="OvenBase"
+            width={611}
+            height={120}
+            priority
+            sizes="160px"
+            className="h-[26px] w-auto sm:h-[28px]"
+          />
         </Link>
 
         <nav className="ml-2 hidden items-center gap-0.5 md:flex">

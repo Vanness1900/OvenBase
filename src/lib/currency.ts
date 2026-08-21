@@ -37,6 +37,21 @@ export function currencyMeta(code: CurrencyCode): CurrencyMeta {
   return CURRENCIES.find((c) => c.code === code) ?? CURRENCIES[0];
 }
 
+/**
+ * The price-range inputs are typed in whatever currency the visitor picked, but
+ * every stored price is in PHP. Convert the two bounds once at filter time
+ * rather than converting 2,000 card prices on every keystroke.
+ */
+export function priceBoundsToPhp(
+  min: number | null,
+  max: number | null,
+  from: string,
+  rates: RateTable,
+): { min: number | null; max: number | null } {
+  const to = (v: number | null) => (v === null ? null : convert(v, from, RATE_BASE, rates));
+  return { min: to(min), max: to(max) };
+}
+
 export function formatMoney(amount: number | null, code: CurrencyCode): string {
   if (amount === null || !Number.isFinite(amount)) return "—";
   const meta = currencyMeta(code);

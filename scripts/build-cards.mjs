@@ -35,7 +35,7 @@ const GRADE_FIXUPS = { 'ULTLA RARE': 'ULTRA RARE', UOMMON: 'UNCOMMON' };
 const WIDE_DIGITS = { '０': '0', '１': '1', '２': '2', '３': '3', '４': '4', '５': '5', '６': '6', '７': '7', '８': '8', '９': '9' };
 const PLUS_SIGNS = ['＋', '₊', '+'];
 
-const COST_SYMBOLS = { R: 'RED', Y: 'YELLOW', G: 'GREEN', B: 'BLUE', P: 'PURPLE', K: 'BLACK', N: 'COLORLESS' };
+const COST_SYMBOLS = { R: 'RED', Y: 'YELLOW', G: 'GREEN', B: 'BLUE', P: 'PURPLE', K: 'BLACK', N: 'PURE' };
 
 /** Rarity preference when collapsing alternate arts to one "base" printing. */
 const BASE_RARITY_ORDER = ['C', 'U', 'R', 'SR', 'UR', 'P'];
@@ -65,8 +65,10 @@ function parseHp(raw) {
   const s = clean(raw);
   if (s === null) return null;
   const norm = asciiDigits(s).trim();
-  const plus = PLUS_SIGNS.some((p) => norm.startsWith(p));
   const value = Number(norm.replace(/[^\d]/g, ''));
+  // An absolute 0 HP is meaningless, so a bare "0" is an awakening that grants
+  // no extra HP -- printed as "+0" on the card (e.g. BS9-088 Pure Vanilla).
+  const plus = PLUS_SIGNS.some((p) => norm.startsWith(p)) || value === 0;
   return Number.isFinite(value) ? { value, plus } : null;
 }
 
@@ -101,7 +103,25 @@ function parseCostColors(attackText) {
   return [...new Set(out)];
 }
 
-/** Keywords are rendered inside 【 】 across skill / attack / flip text. */
+/**
+ * Older sets write keywords as icon tokens instead of 【brackets】, so a purely
+ * bracket-based reader misses them entirely -- searching "Blocker" found the 20
+ * modern printings and none of the 19 older ones.
+ *
+ * No card in the catalog uses both forms for the same keyword (verified across
+ * all 2,093 printings), which is what confirms these are the same thing drawn
+ * two ways rather than distinct mechanics.
+ */
+const TOKEN_KEYWORDS = {
+  ap: 'On Play',
+  mob: 'Activate',
+  t1: 'Once Per Turn',
+  bl: 'Blocker',
+  mou: 'Equip',
+  mt: 'Your Turn',
+};
+
+/** Keywords come from 【 】 brackets plus the old-set icon tokens. */
 function parseKeywords(...texts) {
   const out = new Set();
   for (const t of texts) {
@@ -111,8 +131,62 @@ function parseKeywords(...texts) {
       // Skip the CJK duplicates the asia dump leaves behind.
       if (/^[\x20-\x7E'’:.\- ]+$/.test(k)) out.add(k);
     }
+    for (const [token, label] of Object.entries(TOKEN_KEYWORDS)) {
+      if (t.includes(`{${token}}`)) out.add(label);
+    }
   }
   return [...out];
+}
+
+/**
+ * Cost blocks are payments, not output, so they're stripped before reading
+ * effect values -- "<Place 1 card from the top of your Cookie's HP...>" is a
+ * price you pay, and counting it as damage dealt would be wrong. 53 of the 125
+ * HP-removal phrases in the catalog sit inside a cost block.
+ */
+const stripCosts = (t) => String(t ?? '').replace(/<[^>]*>/g, ' ').replace(/《[^》]*》/g, ' ');
+
+/**
+ * Damage a card deals through effects rather than attacking, including the two
+ * forms that reduce HP without the word "damage": moving cards off the top of a
+ * Cookie's HP into the trash, or onto the bottom of the deck. Both cost the
+ * defender HP just as a hit would.
+ */
+function parseEffectDamage(...texts) {
+  const body = texts.map(stripCosts).join(' ');
+  const out = new Set();
+  const add = (v) => {
+    const n = Number(v);
+    if (Number.isFinite(n) && n > 0) out.add(n);
+  };
+
+  for (const m of body.matchAll(/receives?\s+(\d+)\s+damage/gi)) add(m[1]);
+  for (const m of body.matchAll(/deals?\s+(\d+)\s+damage/gi)) add(m[1]);
+  for (const m of body.matchAll(/(\d+)\s+cards?\s+from the top of[^.]{0,70}?HP/gi)) add(m[1]);
+
+  return [...out].sort((a, b) => a - b);
+}
+
+/** Healing, shown as +N. */
+function parseHeal(...texts) {
+  const body = texts.map(stripCosts).join(' ');
+  const out = new Set();
+  for (const m of body.matchAll(/gains?\s+\+(\d+)\s*HP/gi)) {
+    const n = Number(m[1]);
+    if (Number.isFinite(n) && n > 0) out.add(n);
+  }
+  return [...out].sort((a, b) => a - b);
+}
+
+/** Attack-damage reduction, shown as -N. Overwhelmingly a Trap effect. */
+function parseDamageReduction(...texts) {
+  const body = texts.map(stripCosts).join(' ');
+  const out = new Set();
+  for (const m of body.matchAll(/[-−]\s*(\d+)\s+attack damage/gi)) {
+    const n = Number(m[1]);
+    if (Number.isFinite(n) && n > 0) out.add(n);
+  }
+  return [...out].sort((a, b) => a - b);
 }
 
 function normaliseGroup(raw) {
@@ -181,29 +255,97 @@ const banlist = JSON.parse(readFileSync(BANLIST, 'utf8'));
 const bannedIds = new Set(banlist.banned.map((b) => parseCardNo(b.id).base));
 const restrictedIds = new Set(banlist.restricted.map((b) => parseCardNo(b.id).base));
 
-/** Store feeds key on card number + rarity; fall back to the number alone. */
+/**
+ * Indexes one store's feed.
+ *
+ * Two separate maps, and the split matters: `byRarity` holds listings the store
+ * labelled with a rarity, `byCardNo` only holds listings with NO rarity at all.
+ *
+ * Collapsing them lets a store's UR price leak onto a promo printing it never
+ * stocked -- Agora lists Longan Dragon Fruit Cookie as SUR and UR only, so the
+ * P promos were inheriting the UR price and inventing a listing that does not
+ * exist. A rarity-labelled row must now match a rarity exactly.
+ */
+const KNOWN_RARITIES = new Set(['C', 'U', 'R', 'SEC', 'SR', 'SSR', 'UR', 'SUR', 'EXR', 'GXR', 'P']);
+
+/**
+ * Recovers a rarity from a store's image filename.
+ *
+ * The scrapers anchor on "<cardNo>_<RARITY>", which fails whenever the shop
+ * files a card slightly differently -- HitSeekr has "ST2_020_U_watermark.png"
+ * (underscores, not hyphens) and "BS4_056_P_watermark.png" (Longan filed under
+ * the wrong set number). Those failures made the rarity null, and a null rarity
+ * used to spray one listing's price across every printing of the card.
+ *
+ * Reading the filename independently of the card number recovers both.
+ */
+function rarityFromImage(image) {
+  if (!image) return '';
+  const file = decodeURIComponent(String(image).split('/').pop() ?? '')
+    .toUpperCase()
+    .replace(/_/g, '-');
+  // Drop the leading card-number so its own letters can't be read as a rarity
+  // ("P-036-P-ENG" must yield P from the second field, not the first).
+  const body = file.replace(/^[A-Z]+\d*-\d+/, '');
+  for (const m of body.matchAll(/[-.]([A-Z]{1,3})(?=[-._])/g)) {
+    if (KNOWN_RARITIES.has(m[1])) return m[1];
+  }
+  return '';
+}
+
 function loadStore(path, currency, amountKey) {
   if (!existsSync(path)) {
     console.log(`prices: ${path} not found -- skipping`);
     return null;
   }
   const data = JSON.parse(readFileSync(path, 'utf8'));
-  const map = new Map();
+  const byRarity = new Map();
+  const byCardNo = new Map();
+  let recovered = 0;
+
   for (const row of data.rows ?? []) {
     const amount = row[amountKey];
     if (!row.cardNo || amount === null || amount === undefined) continue;
     const { base } = parseCardNo(row.cardNo);
-    const rarity = row.rarity ? String(row.rarity).toUpperCase() : null;
+    let rarity = row.rarity ? String(row.rarity).toUpperCase().trim() : '';
+    if (!KNOWN_RARITIES.has(rarity)) {
+      const fromImage = rarityFromImage(row.image);
+      if (fromImage) {
+        rarity = fromImage;
+        recovered++;
+      } else if (!rarity) {
+        rarity = '';
+      }
+    }
+
     // Cheapest listing wins -- Agora lists the same card in several conditions.
-    const put = (k) => {
+    const put = (map, k) => {
       const prev = map.get(k);
       if (prev === undefined || amount < prev) map.set(k, amount);
     };
-    if (rarity) put(`${base}|${rarity}`);
-    put(base);
+
+    if (rarity) put(byRarity, `${base}|${rarity}`);
+    else put(byCardNo, base);
   }
-  console.log(`prices: ${path} -> ${map.size} keys (${currency})`);
-  return map;
+
+  console.log(
+    `prices: ${path} -> ${byRarity.size} rarity keys + ${byCardNo.size} unlabelled` +
+      ` (${recovered} rarities recovered from filenames, ${currency})`,
+  );
+  return { byRarity, byCardNo };
+}
+
+/**
+ * Exact rarity match wins. A listing the store left unlabelled is attributed to
+ * the base printing only -- it represents one specific listing, and without a
+ * rarity there's nothing to justify copying it onto every alternate art.
+ */
+function storeLookup(index, base, rarity, isPreferred) {
+  if (!index) return null;
+  const exact = index.byRarity.get(`${base}|${rarity}`);
+  if (exact !== undefined) return exact;
+  if (isPreferred) return index.byCardNo.get(base) ?? null;
+  return null;
 }
 
 const agora = loadStore(PRICES_AGORA, 'SGD', 'priceSGD');
@@ -215,24 +357,13 @@ if (existsSync(TAGS)) {
   console.log(`tags: ${Object.keys(tags).length} cards tagged from HitSeekr`);
 }
 
-let prices = null;
-if (existsSync(PRICES)) {
-  const p = JSON.parse(readFileSync(PRICES, 'utf8'));
-  prices = new Map();
-  for (const row of p.rows) {
-    if (!row.cardNo || row.pricePHP === null) continue;
-    const { base } = parseCardNo(row.cardNo);
-    const key = row.rarity ? `${base}|${row.rarity}` : base;
-    // Keep the first price seen for a given (card, rarity) pair.
-    if (!prices.has(key)) prices.set(key, row.pricePHP);
-    if (!prices.has(base)) prices.set(base, row.pricePHP);
-  }
-  console.log(`prices: loaded ${prices.size} keys from ${PRICES}`);
-} else {
+// HitSeekr goes through the same two-map treatment as the other stores.
+const prices = loadStore(PRICES, 'PHP', 'pricePHP');
+if (!prices) {
   console.log(`prices: ${PRICES} not found -- building catalog without prices`);
 }
 
-const cards = raw.cardList.map((c) => {
+const cards = raw.cardList.map((c, sourceIndex) => {
   const { base, variant, id } = parseCardNo(c.card_no);
   const attackText = clean(c.card_attack_text);
   const skillText = clean(c.card_skill_text);
@@ -254,19 +385,17 @@ const cards = raw.cardList.map((c) => {
   const productTitle = normaliseProduct(c.card_product_title);
   const isExtra = String(c.card_is_extra) === '1' || type === 'EXTRA';
 
-  const lookup = (map) => (map ? (map.get(`${base}|${rarity}`) ?? map.get(base) ?? null) : null);
-  const hitseekrPrice = prices ? (prices.get(`${base}|${rarity}`) ?? prices.get(base) ?? null) : null;
-  const storePrices = {
-    // Per the spec OvenBase mirrors HitSeekr until we have our own averages.
-    ovenbase: hitseekrPrice === null ? null : { amount: hitseekrPrice, currency: 'PHP' },
-    hitseekr: hitseekrPrice === null ? null : { amount: hitseekrPrice, currency: 'PHP' },
-    agora: lookup(agora) === null ? null : { amount: lookup(agora), currency: 'SGD' },
-    'game-academia': lookup(gameAcademia) === null ? null : { amount: lookup(gameAcademia), currency: 'SGD' },
-    tcgplayer: null,
-  };
-
+  // Prices are filled in by a second pass, once we know which printing of each
+  // card number is the base one.
   return {
     id,
+    /**
+     * Position in the official catalog file. That array order IS the official
+     * site's default sort -- newest set first, card number ascending, and the
+     * alternate art listed before its base printing. The last part can't be
+     * re-derived by sorting on any field, so we carry the index through.
+     */
+    sourceIndex,
     cardNo: base,
     variant,
     name: clean(c.card_name),
@@ -280,6 +409,9 @@ const cards = raw.cardList.map((c) => {
     energyMix: energy.mix,
     costColors: parseCostColors(attackText),
     damage: parseDamage(attackText),
+    effectDamage: parseEffectDamage(skillText, attackText, flipText),
+    heal: parseHeal(skillText, attackText, flipText),
+    damageReduction: parseDamageReduction(skillText, attackText, flipText),
     keywords: parseKeywords(skillText, attackText, flipText),
     groups: normaliseGroup(c.card_keyword),
     skillName: clean(c.card_skill_name),
@@ -293,12 +425,35 @@ const cards = raw.cardList.map((c) => {
     image: clean(c.card_image),
     isExtra,
     legality: bannedIds.has(base) ? 'banned' : restrictedIds.has(base) ? 'restricted' : 'legal',
-    pricePHP: hitseekrPrice,
-    prices: storePrices,
+    pricePHP: null,
+    prices: null,
     createdAt: c.create_dt ?? null,
     updatedAt: c.update_dt ?? null,
   };
 });
+
+/*
+ * The official catalog lists Wind Archer Cookie's promo variants twice -- once
+ * with an underscore (BS2_058@2) and again with a hyphen (BS2-058@2). Both
+ * normalise to the same printing, so keep the first occurrence and drop the
+ * repeat; otherwise the same card renders twice and collides on its key.
+ */
+const seenIds = new Set();
+const deduped = [];
+const droppedDuplicates = [];
+for (const c of cards) {
+  if (seenIds.has(c.id)) {
+    droppedDuplicates.push(c.id);
+    continue;
+  }
+  seenIds.add(c.id);
+  deduped.push(c);
+}
+if (droppedDuplicates.length) {
+  console.log(`deduped ${droppedDuplicates.length} repeated printing(s): ${droppedDuplicates.join(', ')}`);
+}
+cards.length = 0;
+cards.push(...deduped);
 
 /* Mark the preferred printing per base card number (drives "hide duplicates"). */
 const byBase = new Map();
@@ -316,6 +471,73 @@ for (const [, group] of byBase) {
   sorted.forEach((c, i) => {
     c.isPreferredPrinting = i === 0;
   });
+}
+
+/* ---------------------------------------------------------- catalog fixups */
+
+/*
+ * The official catalog gets a few cards plainly wrong, and the filters inherit
+ * every mistake. These are all of them, verified individually:
+ *
+ *  - P-036@1 GingerBrave is typed TRAP but has LEVEL 3, HP 5 and a colour, and
+ *    the printed card reads "LEVEL 3 GingerBrave HP 5". It showed up under
+ *    "Red + Trap", which is what surfaced it.
+ *  - BS6-028/029/030 are typed NPC. "TBD" is the in-universe company name, not
+ *    a placeholder; they have level, HP and colour, so they're Cookies.
+ *
+ * The rule is stated as a property rather than a hardcoded id list: carrying a
+ * level AND HP is what makes something a Cookie, so a future mistyped card is
+ * caught without another patch.
+ */
+let retyped = 0;
+for (const c of cards) {
+  if (c.level !== null && c.hp !== null && !['COOKIE', 'FLIP', 'EXTRA'].includes(c.type)) {
+    console.log(`  retyped ${c.id} ${c.type} -> COOKIE (has LV.${c.level} / HP ${c.hp.value})`);
+    c.type = 'COOKIE';
+    retyped++;
+  }
+}
+if (retyped) console.log(`fixups: retyped ${retyped} mislabelled card(s) as COOKIE`);
+
+/*
+ * A printing occasionally drops a stat its siblings have (BS2-061@1 has HP but
+ * no level). Backfill from another printing of the same card number.
+ */
+let backfilled = 0;
+for (const [, group] of byBase) {
+  const withLevel = group.find((c) => c.level !== null);
+  const withHp = group.find((c) => c.hp !== null);
+  for (const c of group) {
+    if (c.level === null && withLevel && ['COOKIE', 'FLIP', 'EXTRA'].includes(c.type)) {
+      c.level = withLevel.level;
+      backfilled++;
+    }
+    if (c.hp === null && withHp && ['COOKIE', 'FLIP', 'EXTRA'].includes(c.type)) {
+      c.hp = withHp.hp;
+      backfilled++;
+    }
+  }
+}
+if (backfilled) console.log(`fixups: backfilled ${backfilled} missing stat(s) from sibling printings`);
+
+/* ------------------------------------------------------------- price pass */
+
+for (const c of cards) {
+  const preferred = Boolean(c.isPreferredPrinting);
+  const hitseekrPrice = storeLookup(prices, c.cardNo, c.rarity, preferred);
+  const agoraPrice = storeLookup(agora, c.cardNo, c.rarity, preferred);
+  const gaPrice = storeLookup(gameAcademia, c.cardNo, c.rarity, preferred);
+  const quote = (amount, currency) => (amount === null ? null : { amount, currency });
+
+  c.pricePHP = hitseekrPrice;
+  c.prices = {
+    // Per the spec OvenBase mirrors HitSeekr until we have our own averages.
+    ovenbase: quote(hitseekrPrice, 'PHP'),
+    hitseekr: quote(hitseekrPrice, 'PHP'),
+    agora: quote(agoraPrice, 'SGD'),
+    'game-academia': quote(gaPrice, 'SGD'),
+    tcgplayer: null,
+  };
 }
 
 /* ------------------------------------------------------------- the report */

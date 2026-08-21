@@ -6,7 +6,8 @@ export type Rarity = "C" | "U" | "R" | "SEC" | "SR" | "SSR" | "UR" | "SUR" | "EX
 
 export type CardColor = "RED" | "YELLOW" | "GREEN" | "BLUE" | "PURPLE" | "PURE" | "BLACK";
 
-export type CostColor = CardColor | "COLORLESS";
+/** The colourless {N} cost is called "Pure" in Braverse. */
+export type CostColor = CardColor;
 
 export type Legality = "legal" | "restricted" | "banned";
 
@@ -21,6 +22,8 @@ export interface Card {
   id: string;
   /** Base card number shared by every printing, e.g. "BS10-024". Deck rules key off this. */
   cardNo: string;
+  /** Position in the official catalog file; reproduces the official default sort. */
+  sourceIndex: number;
   variant: number | null;
   name: string | null;
   type: CardType;
@@ -32,7 +35,14 @@ export interface Card {
   energyColors: string[];
   energyMix: boolean;
   costColors: CostColor[];
+  /** Damage printed on an attack ({da} N). */
   damage: number[];
+  /** Damage dealt by effects, including HP moved to trash or bottom of deck. */
+  effectDamage: number[];
+  /** Healing granted, shown as +N. */
+  heal: number[];
+  /** Attack-damage reduction, shown as -N. Mostly Traps. */
+  damageReduction: number[];
   keywords: string[];
   groups: string[];
   skillName: string | null;

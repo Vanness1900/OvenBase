@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSettings } from "./settings-provider";
 import { CardText, CostPips } from "./card-text";
 import { PriceChart } from "./price-chart";
@@ -24,11 +24,11 @@ const COST_LETTER: Record<string, string> = {
   BLUE: "B",
   PURPLE: "P",
   BLACK: "K",
-  COLORLESS: "N",
+  PURE: "N",
 };
 
 export function CardModal({
-  card,
+  card: openedWith,
   allCards,
   onClose,
 }: {
@@ -38,6 +38,20 @@ export function CardModal({
 }) {
   const { t, currency, rates } = useSettings();
   const closeRef = useRef<HTMLButtonElement>(null);
+
+  /** Other printings of the same card number -- alternate arts and rarities. */
+  const printings = useMemo(
+    () =>
+      allCards
+        .filter((c) => c.cardNo === openedWith.cardNo)
+        .sort((a, b) => (a.variant ?? 0) - (b.variant ?? 0)),
+    [allCards, openedWith.cardNo],
+  );
+
+  // Switching printing swaps the whole modal over to that card. The parent
+  // keys this component by card id, so opening a different card resets it.
+  const [activeId, setActiveId] = useState(openedWith.id);
+  const card = printings.find((p) => p.id === activeId) ?? openedWith;
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -51,12 +65,6 @@ export function CardModal({
     };
   }, [onClose]);
 
-  /** Other printings of the same card number -- alternate arts and rarities. */
-  const printings = useMemo(
-    () => allCards.filter((c) => c.cardNo === card.cardNo).sort((a, b) => (a.variant ?? 0) - (b.variant ?? 0)),
-    [allCards, card.cardNo],
-  );
-
   /**
    * Every store side by side in one currency, so the comparison is the point of
    * the modal. Stores with no quote for this card are shown rather than hidden,
@@ -66,8 +74,12 @@ export function CardModal({
     const amount = storePriceIn(card, s.id, currency, rates);
     return { ...s, amount, native: card.prices?.[s.id] ?? null };
   });
-  const quoted = storeRows.filter((r) => r.amount !== null).map((r) => r.amount as number);
-  const cheapest = quoted.length ? Math.min(...quoted) : null;
+  const quoted = storeRows.filter((r) => r.amount !== null);
+  const cheapest = quoted.length ? Math.min(...quoted.map((r) => r.amount as number)) : null;
+  // Only the first store hitting the minimum is badged, and a store with no
+  // listing can never win because it isn't in `quoted` at all.
+  const cheapestStoreId =
+    quoted.length > 1 ? (quoted.find((r) => r.amount === cheapest)?.id ?? null) : null;
 
   const history: PriceHistoryEntry[] = useMemo(() => {
     if (card.pricePHP === null) return [];
@@ -111,20 +123,39 @@ export function CardModal({
                 <p className="mb-1.5 text-[11.5px] font-bold uppercase tracking-[0.06em] text-[var(--ob-text-faint)]">
                   {printings.length} printings
                 </p>
-                <div className="flex flex-wrap gap-1.5">
-                  {printings.map((p) => (
-                    <span
-                      key={p.id}
-                      className={`rounded-full border px-2 py-1 text-[11px] ${
-                        p.id === card.id
-                          ? "border-transparent bg-[var(--ob-accent)] font-semibold text-[var(--ob-accent-ink)]"
-                          : "border-[var(--ob-line)] text-[var(--ob-text-soft)]"
-                      }`}
-                    >
-                      {p.rarity}
-                    </span>
-                  ))}
-                </div>
+                {/* Thumbnails rather than rarity chips: the alternate arts are
+                    the thing worth seeing, and each one swaps the modal over. */}
+                <ul className="grid grid-cols-4 gap-1.5">
+                  {printings.map((p) => {
+                    const isActive = p.id === card.id;
+                    return (
+                      <li key={p.id}>
+                        <button
+                          type="button"
+                          onClick={() => setActiveId(p.id)}
+                          aria-pressed={isActive}
+                          title={`${p.rarity} — ${p.id}`}
+                          className={`block w-full overflow-hidden rounded-[7px] transition-all ${
+                            isActive
+                              ? "ring-2 ring-[var(--ob-accent)] ring-offset-1 ring-offset-[var(--ob-bg)]"
+                              : "opacity-65 hover:opacity-100"
+                          }`}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={p.image ?? ""}
+                            alt={`${p.name ?? p.id} — ${p.rarity}`}
+                            loading="lazy"
+                            className="aspect-[5/7] w-full bg-[var(--ob-surface-2)] object-cover"
+                          />
+                          <span className="block bg-[var(--ob-surface-2)] py-0.5 text-center text-[9.5px] font-bold leading-tight">
+                            {p.rarity}
+                          </span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
               </div>
             )}
           </div>
@@ -184,9 +215,7 @@ export function CardModal({
             <div className="mt-5 space-y-4 text-[13.5px] leading-relaxed">
               {card.skillName && (
                 <Block label={t("card.skill")}>
-                  <p className="font-semibold">
-                    <CardText text={card.skillName} className="inline" />
-                  </p>
+                  <CardText text={card.skillName} inline className="block font-semibold" />
                   <CardText text={card.skillText} className="mt-1 text-[var(--ob-text-soft)]" />
                 </Block>
               )}
@@ -212,7 +241,9 @@ export function CardModal({
               <h3 className="font-display text-[16px] font-black">{t("card.prices")}</h3>
               <ul className="mt-2.5 divide-y divide-[var(--ob-line)] rounded-[var(--ob-radius-sm)] bg-[var(--ob-surface)] ring-1 ring-[var(--ob-line)]">
                 {storeRows.map((s) => {
-                  const best = s.amount !== null && s.amount === cheapest && quoted.length > 1;
+                  // Tag one row only. OvenBase mirrors HitSeekr, so a tie is
+                  // the norm and badging both just adds noise.
+                  const best = s.id === cheapestStoreId;
                   return (
                     <li key={s.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
                       <span className="flex items-center gap-2 text-[13.5px] font-medium">
@@ -224,15 +255,25 @@ export function CardModal({
                         )}
                       </span>
                       {s.amount === null ? (
-                        <span className="text-[12.5px] text-[var(--ob-text-faint)]">
-                          {s.id === "tcgplayer" ? "not scraped yet" : "not listed"}
+                        <span
+                          className="text-[15px] font-semibold text-[var(--ob-text-faint)]"
+                          title={
+                            s.id === "tcgplayer"
+                              ? "TCGplayer is not scraped yet"
+                              : `${s.label} has no listing for this printing`
+                          }
+                        >
+                          —
                         </span>
                       ) : (
                         <span className="font-display text-[15px] font-black">
                           {formatMoney(s.amount, currency)}
-                          <span className="ml-1.5 text-[11px] font-medium text-[var(--ob-text-faint)]">
-                            {s.native?.currency}
-                          </span>
+                          {/* Only worth noting when we've converted it. */}
+                          {s.native && s.native.currency !== currency && (
+                            <span className="ml-1.5 text-[11px] font-medium text-[var(--ob-text-faint)]">
+                              from {s.native.currency}
+                            </span>
+                          )}
                         </span>
                       )}
                     </li>

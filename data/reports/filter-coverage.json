@@ -1,28 +1,27 @@
 {
-  "generatedAt": "2026-08-21T04:16:19.771Z",
-  "totalPrintings": 2093,
+  "generatedAt": "2026-08-21T16:11:27.596Z",
+  "totalPrintings": 2090,
   "distinctCardNumbers": 1549,
-  "withPrice": 2004,
+  "withPrice": 1906,
   "priceCoverage": {
-    "hitseekr": 2004,
-    "agora": 1696,
-    "game-academia": 1540,
+    "hitseekr": 1906,
+    "agora": 1381,
+    "game-academia": 1400,
     "tcgplayer": 0
   },
   "facets": {
     "type": {
-      "COOKIE": 1386,
+      "COOKIE": 1387,
       "FLIP": 255,
       "ITEM": 167,
-      "TRAP": 147,
+      "TRAP": 146,
       "STAGE": 93,
-      "EXTRA": 42,
-      "NPC": 3
+      "EXTRA": 42
     },
     "rarity": {
       "C": 618,
       "U": 470,
-      "P": 332,
+      "P": 329,
       "SR": 144,
       "SSR": 123,
       "R": 119,
@@ -33,24 +32,24 @@
       "GXR": 1
     },
     "level": {
-      "1": 646,
+      "1": 647,
       "2": 617,
-      "3": 421,
+      "3": 418,
       "5": 2
     },
     "hp": {
-      "0": 3,
       "1": 159,
       "2": 423,
       "3": 451,
       "4": 301,
-      "5": 286,
+      "5": 283,
       "6": 47,
       "+2": 11,
-      "+1": 6
+      "+1": 6,
+      "+0": 3
     },
     "color": {
-      "PURPLE": 399,
+      "PURPLE": 396,
       "RED": 394,
       "YELLOW": 393,
       "BLUE": 392,
@@ -59,9 +58,9 @@
       "PURE": 19
     },
     "costColor": {
-      "COLORLESS": 337,
+      "PURE": 337,
       "YELLOW": 298,
-      "PURPLE": 293,
+      "PURPLE": 290,
       "RED": 289,
       "BLUE": 287,
       "GREEN": 285,
@@ -71,22 +70,22 @@
       "1": 367,
       "2": 443,
       "3": 402,
-      "4": 69,
+      "4": 66,
       "5": 4,
       "7": 2
     },
     "keywords": {
-      "Activate": 338,
-      "On Play": 250,
-      "Once Per Turn": 235,
+      "Activate": 447,
+      "On Play": 396,
+      "Once Per Turn": 306,
       "Arena": 117,
+      "Blocker": 39,
       "EXTRA": 36,
+      "Your Turn": 35,
       "Ancient": 28,
-      "Blocker": 20,
-      "Your Turn": 20,
+      "Equip": 22,
       "Awaken": 14,
       "Special Play": 12,
-      "Equip": 12,
       "Skill": 9,
       "Dragon": 2,
       "Beast": 1
@@ -125,7 +124,6 @@
       "2-ON-2 Event": 4,
       "NA Regionals I": 4,
       "Kingdom Battle": 4,
-      "2025 NA Brave League S1 Final": 3,
       "2025 NA Brave League S2": 3,
       "2026 Brave League Season 3": 2,
       "2026 NA Brave League": 2,
@@ -139,14 +137,14 @@
       "폭군의 분노 프로모션 팩": 1
     },
     "exclusive": {
-      "brave-league": 22,
+      "brave-league": 19,
       "champion-cup": 16,
       "serial": 13,
       "anniversary": 6,
       "stage-prize": 5
     },
     "legality": {
-      "legal": 2069,
+      "legal": 2066,
       "restricted": 18,
       "banned": 6
     }
