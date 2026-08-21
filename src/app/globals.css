@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+/* ----------------------------------------------------------------- tokens
+ *
+ * Achromatic base with a single warning-yellow accent, after the Arknights UI:
+ * roughly 90% black / white / grey, 10% yellow. The yellow means one thing and
+ * one thing only -- "you selected this / this is active" -- so it keeps its
+ * weight instead of becoming decoration.
+ *
+ * Yellow is a light colour, so anything sitting on it uses --ob-accent-ink
+ * (near-black). White on this yellow fails contrast badly.
+ */
+
+:root {
+  --ob-bg: #f2f2f3;
+  --ob-surface: #ffffff;
+  --ob-surface-2: #e7e7ea;
+  --ob-elevated: rgba(255, 255, 255, 0.75);
+  --ob-text: #17171a;
+  --ob-text-soft: #5a5a61;
+  --ob-text-faint: #8e8e96;
+  --ob-line: rgba(23, 23, 26, 0.1);
+  --ob-line-strong: rgba(23, 23, 26, 0.18);
+
+  --ob-accent: #f6d132;
+  --ob-accent-ink: #17171a;
+  --ob-accent-soft: rgba(246, 209, 50, 0.18);
+  --ob-accent-line: rgba(246, 209, 50, 0.55);
+
+  --ob-danger: #e5484d;
+  --ob-warn: #f5a524;
+  --ob-ok: #30a46c;
+
+  /* Braverse card colours -- game data, not part of the UI palette. */
+  --ob-red: #e5484d;
+  --ob-yellow: #f5b700;
+  --ob-green: #46a758;
+  --ob-blue: #0090ff;
+  --ob-purple: #8e4ec6;
+  --ob-black: #2b2b31;
+  --ob-pure: #b9b9c6;
+  --ob-colorless: #c9c9d2;
+
+  --ob-radius: 18px;
+  --ob-radius-sm: 12px;
+  --ob-radius-lg: 26px;
+
+  --ob-shadow: 0 1px 2px rgba(15, 15, 18, 0.05), 0 8px 24px rgba(15, 15, 18, 0.07);
+  --ob-shadow-lg: 0 2px 6px rgba(15, 15, 18, 0.08), 0 24px 60px rgba(15, 15, 18, 0.14);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ob-bg: #131316;
+    --ob-surface: #1c1c21;
+    --ob-surface-2: #26262c;
+    --ob-elevated: rgba(28, 28, 33, 0.75);
+    --ob-text: #f5f5f6;
+    --ob-text-soft: #a0a0a8;
+    --ob-text-faint: #6e6e77;
+    --ob-line: rgba(255, 255, 255, 0.1);
+    --ob-line-strong: rgba(255, 255, 255, 0.18);
+
+    --ob-accent: #f6d132;
+    --ob-accent-ink: #17171a;
+    --ob-accent-soft: rgba(246, 209, 50, 0.14);
+    --ob-accent-line: rgba(246, 209, 50, 0.45);
+
+    --ob-danger: #ff6369;
+    --ob-warn: #ffb224;
+    --ob-ok: #3dd68c;
+
+    --ob-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+    --ob-shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.6), 0 24px 60px rgba(0, 0, 0, 0.55);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ob-bg: #131316;
+  --ob-surface: #1c1c21;
+  --ob-surface-2: #26262c;
+  --ob-elevated: rgba(28, 28, 33, 0.75);
+  --ob-text: #f5f5f6;
+  --ob-text-soft: #a0a0a8;
+  --ob-text-faint: #6e6e77;
+  --ob-line: rgba(255, 255, 255, 0.1);
+  --ob-line-strong: rgba(255, 255, 255, 0.18);
+  --ob-accent-soft: rgba(246, 209, 50, 0.14);
+  --ob-accent-line: rgba(246, 209, 50, 0.45);
+  --ob-danger: #ff6369;
+  --ob-warn: #ffb224;
+  --ob-ok: #3dd68c;
+  --ob-shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px rgba(0, 0, 0, 0.4);
+  --ob-shadow-lg: 0 2px 6px rgba(0, 0, 0, 0.6), 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+@theme inline {
+  --color-bg: var(--ob-bg);
+  --color-surface: var(--ob-surface);
+  --color-surface-2: var(--ob-surface-2);
+  --color-ink: var(--ob-text);
+  --color-ink-soft: var(--ob-text-soft);
+  --color-ink-faint: var(--ob-text-faint);
+  --color-line: var(--ob-line);
+  --color-line-strong: var(--ob-line-strong);
+  --color-accent: var(--ob-accent);
+  --color-accent-ink: var(--ob-accent-ink);
+
+  --color-cr-red: var(--ob-red);
+  --color-cr-yellow: var(--ob-yellow);
+  --color-cr-green: var(--ob-green);
+  --color-cr-blue: var(--ob-blue);
+  --color-cr-purple: var(--ob-purple);
+  --color-cr-black: var(--ob-black);
+  --color-cr-pure: var(--ob-pure);
+
+  --radius-ob: var(--ob-radius);
+  --radius-ob-sm: var(--ob-radius-sm);
+  --radius-ob-lg: var(--ob-radius-lg);
+
+  /* Set by next/font in layout.tsx -- Fredoka for display, Inter for text. */
+  --font-display: var(--font-fredoka), ui-rounded, "SF Pro Rounded", "Segoe UI", system-ui, sans-serif;
+  --font-sans: var(--font-inter), -apple-system, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+}
+
+/* ------------------------------------------------------------------- base */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--ob-bg);
+  color: var(--ob-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+::selection {
+  background: var(--ob-accent);
+  color: var(--ob-accent-ink);
+}
+
+/* One visible focus treatment everywhere, in the accent. */
+:focus-visible {
+  outline: 2px solid var(--ob-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------- helpers */
+
+@utility ob-card {
+  background: var(--ob-surface);
+  border: 1px solid var(--ob-line);
+  border-radius: var(--ob-radius);
+  box-shadow: var(--ob-shadow);
+}
+
+@utility ob-blur {
+  background: var(--ob-elevated);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+/* iOS-style segmented control: the active pill stays neutral so the accent
+   isn't competing with itself across a page full of controls. */
+@utility ob-segment {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  background: var(--ob-surface-2);
+  border-radius: 999px;
+}
+
+/* Selection state. Yellow means "active" -- chips, toggles, count badges. */
+@utility ob-selected {
+  background: var(--ob-accent);
+  color: var(--ob-accent-ink);
+  border-color: transparent;
+  font-weight: 600;
+}
+
+.ob-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ob-line-strong) transparent;
+}
+.ob-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.ob-scroll::-webkit-scrollbar-thumb {
+  background: var(--ob-line-strong);
+  border-radius: 999px;
+}
+.ob-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

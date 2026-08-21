@@ -1,0 +1,154 @@
+{
+  "generatedAt": "2026-08-21T04:16:19.771Z",
+  "totalPrintings": 2093,
+  "distinctCardNumbers": 1549,
+  "withPrice": 2004,
+  "priceCoverage": {
+    "hitseekr": 2004,
+    "agora": 1696,
+    "game-academia": 1540,
+    "tcgplayer": 0
+  },
+  "facets": {
+    "type": {
+      "COOKIE": 1386,
+      "FLIP": 255,
+      "ITEM": 167,
+      "TRAP": 147,
+      "STAGE": 93,
+      "EXTRA": 42,
+      "NPC": 3
+    },
+    "rarity": {
+      "C": 618,
+      "U": 470,
+      "P": 332,
+      "SR": 144,
+      "SSR": 123,
+      "R": 119,
+      "SEC": 111,
+      "UR": 83,
+      "SUR": 81,
+      "EXR": 11,
+      "GXR": 1
+    },
+    "level": {
+      "1": 646,
+      "2": 617,
+      "3": 421,
+      "5": 2
+    },
+    "hp": {
+      "0": 3,
+      "1": 159,
+      "2": 423,
+      "3": 451,
+      "4": 301,
+      "5": 286,
+      "6": 47,
+      "+2": 11,
+      "+1": 6
+    },
+    "color": {
+      "PURPLE": 399,
+      "RED": 394,
+      "YELLOW": 393,
+      "BLUE": 392,
+      "GREEN": 391,
+      "BLACK": 37,
+      "PURE": 19
+    },
+    "costColor": {
+      "COLORLESS": 337,
+      "YELLOW": 298,
+      "PURPLE": 293,
+      "RED": 289,
+      "BLUE": 287,
+      "GREEN": 285,
+      "BLACK": 30
+    },
+    "damage": {
+      "1": 367,
+      "2": 443,
+      "3": 402,
+      "4": 69,
+      "5": 4,
+      "7": 2
+    },
+    "keywords": {
+      "Activate": 338,
+      "On Play": 250,
+      "Once Per Turn": 235,
+      "Arena": 117,
+      "EXTRA": 36,
+      "Ancient": 28,
+      "Blocker": 20,
+      "Your Turn": 20,
+      "Awaken": 14,
+      "Special Play": 12,
+      "Equip": 12,
+      "Skill": 9,
+      "Dragon": 2,
+      "Beast": 1
+    },
+    "groups": {
+      "ARENA": 163,
+      "ANCIENT": 58,
+      "BEAST": 41,
+      "DRAGON": 19
+    },
+    "product": {
+      "BOOSTER PACK [Age of Heroes and Kingdoms]": 306,
+      "BOOSTER PACK [Operation Timeguard]": 274,
+      "PROMOTION CARD": 265,
+      "BOOSTER PACK [BRAVE BEGINNING]": 203,
+      "BOOSTER PACK [A Game of Truth and Deceit]": 173,
+      "BOOSTER PACK [Land of Fire & Ruin, Realm of Apathy]": 156,
+      "BOOSTER PACK [Paradise of Passion & Sloth / Catacombs of Silence]": 155,
+      "BOOSTER PACK [The Dark Enchantress War]": 150,
+      "BOOSTER PACK [Arena of Glory]": 136,
+      "Starter Deck RED": 22,
+      "Starter Deck GREEN": 22,
+      "Starter Deck BLUE": 22,
+      "Starter Deck PURPLE": 22,
+      "Starter Deck YELLOW": 20,
+      "Flames of Immortality": 20,
+      "Tree of Life": 20,
+      "Guardian Winds": 20,
+      "Seas of Fate": 20,
+      "Glorious Moonlight": 20,
+      "Ancient Scriptures Promotion Pack": 12,
+      "Eternal Farewell promotion pack": 8,
+      "Champion‘s Legacy Pack": 5,
+      "Legacy Pack": 5,
+      "2026 Summer Champion Cup": 5,
+      "2-ON-2 Event": 4,
+      "NA Regionals I": 4,
+      "Kingdom Battle": 4,
+      "2025 NA Brave League S1 Final": 3,
+      "2025 NA Brave League S2": 3,
+      "2026 Brave League Season 3": 2,
+      "2026 NA Brave League": 2,
+      "2025 언박싱런 우승": 1,
+      "Judge promotion": 1,
+      "2025 NA Champion Cup": 1,
+      "2026 Brave League Season 2 FINAL Champion": 1,
+      "2026 Brave League Season 2 FINAL Runner-Up": 1,
+      "2026 Brave League Season 2 FINAL Top 4": 1,
+      "BS11 Release Event": 1,
+      "폭군의 분노 프로모션 팩": 1
+    },
+    "exclusive": {
+      "brave-league": 22,
+      "champion-cup": 16,
+      "serial": 13,
+      "anniversary": 6,
+      "stage-prize": 5
+    },
+    "legality": {
+      "legal": 2069,
+      "restricted": 18,
+      "banned": 6
+    }
+  }
+}

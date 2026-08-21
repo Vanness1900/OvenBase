@@ -1,0 +1,40 @@
+{
+  "name": "ovenbase",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint src --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "scrape:hitseekr": "node scripts/scrape-hitseekr.mjs",
+    "data:cards": "node scripts/build-cards.mjs",
+    "data:decks": "node scripts/build-decks.mjs",
+    "data:all": "npm run scrape:all && npm run data:cards && npm run data:decks",
+    "scrape:agora": "node scripts/scrape-agora.mjs",
+    "scrape:game-academia": "node scripts/scrape-game-academia.mjs",
+    "scrape:tags": "node scripts/scrape-hitseekr-tags.mjs",
+    "scrape:all": "npm run scrape:hitseekr && npm run scrape:tags && npm run scrape:agora && npm run scrape:game-academia",
+    "db:seed": "node scripts/seed-supabase.mjs"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.4",
+    "@supabase/supabase-js": "^2.112.3",
+    "cheerio": "^1.2.0",
+    "next": "16.3.1",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "recharts": "^3.10.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.1",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

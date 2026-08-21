@@ -1,0 +1,1157 @@
+{
+  "source": "hitseekr.com/wp-json/wp/v2/card-type-2",
+  "scrapedAt": "2026-08-21T04:15:01.920Z",
+  "note": "Cookie Party is not present in this taxonomy -- no public source found.",
+  "perTerm": {
+    "ancient": 25,
+    "anniversary": 2,
+    "arena": 128,
+    "beast": 14,
+    "brave-league": 3,
+    "champion-cup": 3,
+    "dragon": 6,
+    "equip": 10,
+    "extra": 17,
+    "flip": 176,
+    "serial": 3,
+    "special-play": 5,
+    "stage-prize": 1
+  },
+  "tags": {
+    "BS11-034": [
+      "ancient"
+    ],
+    "BS11-070": [
+      "ancient"
+    ],
+    "BS11-087": [
+      "ancient"
+    ],
+    "BS11-090": [
+      "ancient"
+    ],
+    "BS11-017": [
+      "ancient"
+    ],
+    "BS10-073": [
+      "ancient",
+      "extra"
+    ],
+    "BS10-069": [
+      "ancient"
+    ],
+    "BS10-024": [
+      "ancient",
+      "extra"
+    ],
+    "BS10-021": [
+      "ancient"
+    ],
+    "BS9-097": [
+      "ancient"
+    ],
+    "BS9-089": [
+      "ancient"
+    ],
+    "BS9-088": [
+      "ancient",
+      "extra"
+    ],
+    "BS9-078": [
+      "ancient"
+    ],
+    "BS9-065": [
+      "ancient"
+    ],
+    "BS9-024": [
+      "ancient"
+    ],
+    "BS9-017": [
+      "ancient"
+    ],
+    "BS8-104": [
+      "ancient",
+      "extra"
+    ],
+    "BS8-103": [
+      "ancient"
+    ],
+    "BS8-027": [
+      "ancient",
+      "extra"
+    ],
+    "BS8-026": [
+      "ancient"
+    ],
+    "BS3-100": [
+      "ancient"
+    ],
+    "BS3-088": [
+      "ancient"
+    ],
+    "BS3-055": [
+      "ancient"
+    ],
+    "BS3-025": [
+      "ancient"
+    ],
+    "BS3-017": [
+      "ancient"
+    ],
+    "BS7-093": [
+      "anniversary",
+      "arena"
+    ],
+    "P-087": [
+      "anniversary"
+    ],
+    "P-121": [
+      "arena"
+    ],
+    "P-120": [
+      "arena"
+    ],
+    "P-119": [
+      "arena"
+    ],
+    "P-117": [
+      "arena"
+    ],
+    "P-116": [
+      "arena"
+    ],
+    "P-115": [
+      "arena"
+    ],
+    "P-114": [
+      "arena"
+    ],
+    "P-111": [
+      "arena"
+    ],
+    "P-110": [
+      "arena"
+    ],
+    "P-109": [
+      "arena"
+    ],
+    "P-108": [
+      "arena"
+    ],
+    "P-106": [
+      "arena"
+    ],
+    "P-105": [
+      "arena"
+    ],
+    "P-104": [
+      "arena"
+    ],
+    "P-103": [
+      "arena"
+    ],
+    "P-075": [
+      "arena"
+    ],
+    "P-074": [
+      "arena"
+    ],
+    "P-073": [
+      "arena"
+    ],
+    "P-072": [
+      "arena"
+    ],
+    "P-071": [
+      "arena"
+    ],
+    "P-70": [
+      "arena"
+    ],
+    "BS7-108": [
+      "arena"
+    ],
+    "BS7-107": [
+      "arena"
+    ],
+    "BS7-106": [
+      "arena"
+    ],
+    "BS7-105": [
+      "arena"
+    ],
+    "BS7-104": [
+      "arena"
+    ],
+    "BS7-103": [
+      "arena"
+    ],
+    "BS7-102": [
+      "arena"
+    ],
+    "BS7-101": [
+      "arena"
+    ],
+    "BS7-100": [
+      "arena",
+      "flip"
+    ],
+    "BS7-099": [
+      "arena"
+    ],
+    "BS7-098": [
+      "arena"
+    ],
+    "BS7-097": [
+      "arena"
+    ],
+    "BS7-096": [
+      "arena",
+      "flip"
+    ],
+    "BS7-095": [
+      "arena"
+    ],
+    "BS7-094": [
+      "arena"
+    ],
+    "BS7-092": [
+      "arena"
+    ],
+    "BS7-091": [
+      "arena"
+    ],
+    "BS7-090": [
+      "arena"
+    ],
+    "BS7-089": [
+      "arena"
+    ],
+    "BS7-088": [
+      "arena"
+    ],
+    "BS7-087": [
+      "arena"
+    ],
+    "BS7-086": [
+      "arena"
+    ],
+    "BS7-085": [
+      "arena"
+    ],
+    "BS7-084": [
+      "arena"
+    ],
+    "BS7-083": [
+      "arena"
+    ],
+    "BS7-082": [
+      "arena"
+    ],
+    "BS7-081": [
+      "arena"
+    ],
+    "BS7-080": [
+      "arena"
+    ],
+    "BS7-079": [
+      "arena"
+    ],
+    "BS7-078": [
+      "arena",
+      "flip"
+    ],
+    "BS7-077": [
+      "arena"
+    ],
+    "BS7-076": [
+      "arena"
+    ],
+    "BS7-075": [
+      "arena"
+    ],
+    "BS7-074": [
+      "arena"
+    ],
+    "BS7-073": [
+      "arena"
+    ],
+    "BS7-072": [
+      "arena",
+      "flip"
+    ],
+    "BS7-071": [
+      "arena"
+    ],
+    "BS7-070": [
+      "arena"
+    ],
+    "BS7-069": [
+      "arena"
+    ],
+    "BS7-068": [
+      "arena"
+    ],
+    "BS7-067": [
+      "arena"
+    ],
+    "BS7-066": [
+      "arena"
+    ],
+    "BS7-065": [
+      "arena"
+    ],
+    "BS7-064": [
+      "arena"
+    ],
+    "BS7-063": [
+      "arena"
+    ],
+    "BS7-062": [
+      "arena",
+      "flip"
+    ],
+    "BS7-061": [
+      "arena"
+    ],
+    "BS7-060": [
+      "arena"
+    ],
+    "BS7-059": [
+      "arena"
+    ],
+    "BS7-058": [
+      "arena"
+    ],
+    "BS7-057": [
+      "arena"
+    ],
+    "BS7-056": [
+      "arena",
+      "flip"
+    ],
+    "BS7-055": [
+      "arena"
+    ],
+    "BS7-054": [
+      "arena"
+    ],
+    "BS7-053": [
+      "arena"
+    ],
+    "BS7-052": [
+      "arena"
+    ],
+    "BS7-051": [
+      "arena"
+    ],
+    "BS7-050": [
+      "arena"
+    ],
+    "BS7-049": [
+      "arena"
+    ],
+    "BS7-048": [
+      "arena"
+    ],
+    "BS7-047": [
+      "arena"
+    ],
+    "BS7-046": [
+      "arena"
+    ],
+    "BS7-045": [
+      "arena"
+    ],
+    "BS7-044": [
+      "arena"
+    ],
+    "BS7-043": [
+      "arena"
+    ],
+    "BS7-042": [
+      "arena"
+    ],
+    "BS7-041": [
+      "arena"
+    ],
+    "BS7-040": [
+      "arena"
+    ],
+    "BS7-039": [
+      "arena"
+    ],
+    "BS7-038": [
+      "arena"
+    ],
+    "BS7-037": [
+      "arena"
+    ],
+    "BS7-036": [
+      "arena"
+    ],
+    "BS7-035": [
+      "arena"
+    ],
+    "BS7-034": [
+      "arena"
+    ],
+    "BS7-033": [
+      "arena"
+    ],
+    "BS7-032": [
+      "arena"
+    ],
+    "BS7-031": [
+      "arena"
+    ],
+    "BS7-030": [
+      "arena",
+      "flip"
+    ],
+    "BS7-029": [
+      "arena"
+    ],
+    "BS7-028": [
+      "arena"
+    ],
+    "BS7-027": [
+      "arena"
+    ],
+    "BS7-026": [
+      "arena"
+    ],
+    "BS7-025": [
+      "arena",
+      "flip"
+    ],
+    "BS7-024": [
+      "arena"
+    ],
+    "BS7-023": [
+      "arena"
+    ],
+    "BS7-022": [
+      "arena"
+    ],
+    "BS7-021": [
+      "arena"
+    ],
+    "BS7-020": [
+      "arena"
+    ],
+    "BS7-019": [
+      "arena"
+    ],
+    "BS7-018": [
+      "arena"
+    ],
+    "BS7-017": [
+      "arena"
+    ],
+    "BS7-016": [
+      "arena"
+    ],
+    "BS7-015": [
+      "arena"
+    ],
+    "BS7-014": [
+      "arena"
+    ],
+    "BS7-013": [
+      "arena"
+    ],
+    "BS7-012": [
+      "arena"
+    ],
+    "BS7-011": [
+      "arena",
+      "flip"
+    ],
+    "BS7-010": [
+      "arena"
+    ],
+    "BS7-009": [
+      "arena"
+    ],
+    "BS7-008": [
+      "arena"
+    ],
+    "BS7-007": [
+      "arena"
+    ],
+    "BS7-006": [
+      "arena"
+    ],
+    "BS7-005": [
+      "arena"
+    ],
+    "BS7-004": [
+      "arena"
+    ],
+    "BS7-003": [
+      "arena"
+    ],
+    "BS7-002": [
+      "arena",
+      "flip"
+    ],
+    "BS11-018": [
+      "beast"
+    ],
+    "BS11-036": [
+      "beast"
+    ],
+    "BS11-053": [
+      "beast"
+    ],
+    "BS11-071": [
+      "beast"
+    ],
+    "BS11-089": [
+      "beast"
+    ],
+    "BS10-122": [
+      "beast"
+    ],
+    "BS10-049": [
+      "beast"
+    ],
+    "BS9-079": [
+      "beast"
+    ],
+    "BS9-102": [
+      "beast",
+      "extra"
+    ],
+    "BS9-055": [
+      "beast",
+      "extra"
+    ],
+    "BS9-030": [
+      "beast",
+      "extra"
+    ],
+    "BS9-010": [
+      "beast",
+      "extra"
+    ],
+    "BS8-009": [
+      "beast",
+      "serial"
+    ],
+    "BS8-059": [
+      "beast"
+    ],
+    "BS4-042": [
+      "brave-league"
+    ],
+    "BS3-069": [
+      "brave-league"
+    ],
+    "BS2-058": [
+      "brave-league"
+    ],
+    "BS8-019": [
+      "champion-cup"
+    ],
+    "BS3-121": [
+      "champion-cup"
+    ],
+    "BS3-095": [
+      "champion-cup"
+    ],
+    "ST6-004": [
+      "dragon"
+    ],
+    "BS5-056": [
+      "dragon",
+      "serial"
+    ],
+    "BS5-093": [
+      "dragon"
+    ],
+    "BS5-071": [
+      "dragon"
+    ],
+    "BS5-040": [
+      "dragon"
+    ],
+    "BS5-013": [
+      "dragon"
+    ],
+    "BS10-045": [
+      "equip"
+    ],
+    "BS9-092": [
+      "equip"
+    ],
+    "BS8-072": [
+      "equip"
+    ],
+    "BS8-021": [
+      "equip"
+    ],
+    "BS5-111": [
+      "equip"
+    ],
+    "BS3-115": [
+      "equip"
+    ],
+    "BS3-091": [
+      "equip"
+    ],
+    "BS3-066": [
+      "equip"
+    ],
+    "BS3-043": [
+      "equip"
+    ],
+    "BS3-019": [
+      "equip"
+    ],
+    "BS11-091": [
+      "extra"
+    ],
+    "BS11-116": [
+      "extra"
+    ],
+    "BS10-123": [
+      "extra"
+    ],
+    "BS10-098": [
+      "extra"
+    ],
+    "BS10-048": [
+      "extra"
+    ],
+    "BS8-090": [
+      "extra"
+    ],
+    "BS8-069": [
+      "extra"
+    ],
+    "BS8-005": [
+      "extra"
+    ],
+    "BS11-059": [
+      "flip"
+    ],
+    "BS11-075": [
+      "flip"
+    ],
+    "BS11-076": [
+      "flip"
+    ],
+    "BS11-093": [
+      "flip"
+    ],
+    "BS11-095": [
+      "flip"
+    ],
+    "BS11-096": [
+      "flip"
+    ],
+    "BS11-100": [
+      "flip"
+    ],
+    "BS11-101": [
+      "flip"
+    ],
+    "BS11-003": [
+      "flip"
+    ],
+    "BS11-005": [
+      "flip"
+    ],
+    "BS11-019": [
+      "flip"
+    ],
+    "BS11-020": [
+      "flip"
+    ],
+    "BS11-039": [
+      "flip"
+    ],
+    "BS11-040": [
+      "flip"
+    ],
+    "BS11-057": [
+      "flip"
+    ],
+    "BS10-104": [
+      "flip"
+    ],
+    "BS10-100": [
+      "flip"
+    ],
+    "BS10-078": [
+      "flip"
+    ],
+    "BS10-077": [
+      "flip"
+    ],
+    "BS10-056": [
+      "flip"
+    ],
+    "BS10-053": [
+      "flip"
+    ],
+    "BS10-033": [
+      "flip"
+    ],
+    "BS10-026": [
+      "flip"
+    ],
+    "BS10-008": [
+      "flip"
+    ],
+    "BS10-003": [
+      "flip"
+    ],
+    "P-118": [
+      "flip"
+    ],
+    "P-113": [
+      "flip"
+    ],
+    "P-112": [
+      "flip"
+    ],
+    "P-107": [
+      "flip"
+    ],
+    "P-092": [
+      "flip"
+    ],
+    "P-100": [
+      "flip"
+    ],
+    "P-099": [
+      "flip"
+    ],
+    "BS9-113": [
+      "flip"
+    ],
+    "BS9-053": [
+      "flip"
+    ],
+    "BS9-041": [
+      "flip"
+    ],
+    "BS9-031": [
+      "flip"
+    ],
+    "BS9-025": [
+      "flip"
+    ],
+    "BS9-110": [
+      "flip"
+    ],
+    "BS9-104": [
+      "flip"
+    ],
+    "BS9-085": [
+      "flip"
+    ],
+    "BS9-084": [
+      "flip"
+    ],
+    "BS9-071": [
+      "flip"
+    ],
+    "BS9-051": [
+      "flip"
+    ],
+    "BS9-048": [
+      "flip"
+    ],
+    "BS9-042": [
+      "flip"
+    ],
+    "BS9-032": [
+      "flip"
+    ],
+    "BS9-029": [
+      "flip"
+    ],
+    "BS9-026": [
+      "flip"
+    ],
+    "BS9-007": [
+      "flip"
+    ],
+    "BS9-005": [
+      "flip"
+    ],
+    "BS9-001": [
+      "flip"
+    ],
+    "ST8-009": [
+      "flip"
+    ],
+    "ST8-007": [
+      "flip"
+    ],
+    "ST8-006": [
+      "flip"
+    ],
+    "ST8-002": [
+      "flip"
+    ],
+    "ST7-007": [
+      "flip"
+    ],
+    "ST7-006": [
+      "flip"
+    ],
+    "ST7-005": [
+      "flip"
+    ],
+    "ST7-003": [
+      "flip"
+    ],
+    "ST6-008": [
+      "flip"
+    ],
+    "ST6-006": [
+      "flip"
+    ],
+    "ST6-005": [
+      "flip"
+    ],
+    "BS3-027": [
+      "flip"
+    ],
+    "BS1-040": [
+      "flip"
+    ],
+    "BS1-002": [
+      "flip"
+    ],
+    "BS1-069": [
+      "flip"
+    ],
+    "P-085": [
+      "flip"
+    ],
+    "P-081": [
+      "flip"
+    ],
+    "BS8-102": [
+      "flip"
+    ],
+    "BS8-101": [
+      "flip"
+    ],
+    "BS8-093": [
+      "flip"
+    ],
+    "BS8-080": [
+      "flip"
+    ],
+    "BS8-063": [
+      "flip"
+    ],
+    "BS8-055": [
+      "flip"
+    ],
+    "BS8-041": [
+      "flip"
+    ],
+    "BS8-036": [
+      "flip"
+    ],
+    "BS8-015": [
+      "flip"
+    ],
+    "BS8-001": [
+      "flip"
+    ],
+    "P-040": [
+      "flip"
+    ],
+    "BS2-072": [
+      "flip"
+    ],
+    "ST5-012": [
+      "flip"
+    ],
+    "ST5-008": [
+      "flip"
+    ],
+    "ST5-003": [
+      "flip"
+    ],
+    "BS2-037": [
+      "flip"
+    ],
+    "ST4-014": [
+      "flip"
+    ],
+    "ST4-009": [
+      "flip"
+    ],
+    "ST4-006": [
+      "flip"
+    ],
+    "BS1-055": [
+      "flip"
+    ],
+    "ST3-014": [
+      "flip"
+    ],
+    "ST3-008": [
+      "flip"
+    ],
+    "ST3-007": [
+      "flip"
+    ],
+    "BS1-030": [
+      "flip"
+    ],
+    "ST2-014": [
+      "flip"
+    ],
+    "ST2-007": [
+      "flip"
+    ],
+    "ST2-005": [
+      "flip"
+    ],
+    "BS1-015": [
+      "flip"
+    ],
+    "ST1-013": [
+      "flip"
+    ],
+    "ST1-004": [
+      "flip"
+    ],
+    "ST1-001": [
+      "flip"
+    ],
+    "BS4-032": [
+      "flip"
+    ],
+    "P-047": [
+      "flip"
+    ],
+    "P-077": [
+      "flip"
+    ],
+    "P-063": [
+      "flip"
+    ],
+    "P-022": [
+      "flip"
+    ],
+    "P-027": [
+      "flip"
+    ],
+    "P-026": [
+      "flip"
+    ],
+    "P-025": [
+      "flip"
+    ],
+    "P-024": [
+      "flip"
+    ],
+    "BS2-063": [
+      "flip"
+    ],
+    "BS2-056": [
+      "flip"
+    ],
+    "BS2-042": [
+      "flip"
+    ],
+    "BS2-034": [
+      "flip"
+    ],
+    "BS2-019": [
+      "flip"
+    ],
+    "BS2-009": [
+      "flip"
+    ],
+    "BS2-001": [
+      "flip"
+    ],
+    "BS1-067": [
+      "flip"
+    ],
+    "BS1-041": [
+      "flip"
+    ],
+    "BS1-018": [
+      "flip"
+    ],
+    "BS6-104": [
+      "flip"
+    ],
+    "BS6-103": [
+      "flip"
+    ],
+    "BS6-069": [
+      "flip"
+    ],
+    "BS6-067": [
+      "flip"
+    ],
+    "BS6-056": [
+      "flip"
+    ],
+    "BS6-046": [
+      "flip"
+    ],
+    "BS6-037": [
+      "flip"
+    ],
+    "BS6-027": [
+      "flip"
+    ],
+    "BS6-009": [
+      "flip"
+    ],
+    "BS6-006": [
+      "flip"
+    ],
+    "BS5-095": [
+      "flip"
+    ],
+    "BS5-090": [
+      "flip"
+    ],
+    "BS5-082": [
+      "flip"
+    ],
+    "BS5-073": [
+      "flip"
+    ],
+    "BS5-049": [
+      "flip"
+    ],
+    "BS5-046": [
+      "flip"
+    ],
+    "BS5-041": [
+      "flip"
+    ],
+    "BS5-038": [
+      "flip"
+    ],
+    "BS5-009": [
+      "flip"
+    ],
+    "BS4-105": [
+      "flip"
+    ],
+    "BS4-102": [
+      "flip"
+    ],
+    "BS4-101": [
+      "flip"
+    ],
+    "BS5-004": [
+      "flip"
+    ],
+    "BS4-072": [
+      "flip"
+    ],
+    "BS4-068": [
+      "flip"
+    ],
+    "BS4-067": [
+      "flip"
+    ],
+    "BS4-057": [
+      "flip"
+    ],
+    "BS4-056": [
+      "flip"
+    ],
+    "BS4-050": [
+      "flip"
+    ],
+    "BS4-036": [
+      "flip"
+    ],
+    "BS4-031": [
+      "flip"
+    ],
+    "BS4-010": [
+      "flip"
+    ],
+    "BS4-008": [
+      "flip"
+    ],
+    "BS4-006": [
+      "flip"
+    ],
+    "BS3-107": [
+      "flip"
+    ],
+    "BS3-106": [
+      "flip"
+    ],
+    "BS3-085": [
+      "flip"
+    ],
+    "BS3-074": [
+      "flip"
+    ],
+    "BS3-058": [
+      "flip"
+    ],
+    "BS3-056": [
+      "flip"
+    ],
+    "BS3-035": [
+      "flip"
+    ],
+    "BS3-012": [
+      "flip"
+    ],
+    "BS3-004": [
+      "flip"
+    ],
+    "ST5-014": [
+      "flip"
+    ],
+    "ST4-003": [
+      "flip"
+    ],
+    "ST3-011": [
+      "flip"
+    ],
+    "ST2-012": [
+      "flip"
+    ],
+    "ST1-015": [
+      "flip"
+    ],
+    "BS4-026": [
+      "serial"
+    ],
+    "BS11-111": [
+      "special-play"
+    ],
+    "BS11-112": [
+      "special-play"
+    ],
+    "BS11-113": [
+      "special-play"
+    ],
+    "BS11-114": [
+      "special-play"
+    ],
+    "BS11-115": [
+      "special-play"
+    ],
+    "BS4-092": [
+      "stage-prize"
+    ]
+  }
+}

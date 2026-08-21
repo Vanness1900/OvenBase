@@ -1,0 +1,154 @@
+[
+  {
+    "id": "100",
+    "title": "BOOSTER PACK [The Dark Enchantress War]",
+    "kind": "BOOSTERPACK",
+    "order": 1,
+    "cardCount": 150,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=100"
+  },
+  {
+    "id": "100",
+    "title": "BOOSTER PACK [Paradise of Passion & Sloth / Catacombs of Silence]",
+    "kind": "BOOSTERPACK",
+    "order": 2,
+    "cardCount": 155,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=100"
+  },
+  {
+    "id": "241",
+    "title": "BOOSTER PACK [A Game of Truth and Deceit]",
+    "kind": "BOOSTERPACK",
+    "order": 3,
+    "cardCount": 173,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=241"
+  },
+  {
+    "id": "241",
+    "title": "BOOSTER PACK [Land of Fire & Ruin, Realm of Apathy]",
+    "kind": "BOOSTERPACK",
+    "order": 4,
+    "cardCount": 156,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=241"
+  },
+  {
+    "id": "210",
+    "title": "BOOSTER PACK [Arena of Glory]",
+    "kind": "BOOSTERPACK",
+    "order": 5,
+    "cardCount": 136,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=210"
+  },
+  {
+    "id": "100",
+    "title": "BOOSTER PACK [Operation Timeguard]",
+    "kind": "BOOSTERPACK",
+    "order": 6,
+    "cardCount": 274,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=100"
+  },
+  {
+    "id": "209",
+    "title": "BOOSTER PACK [Age of Heroes and Kingdoms]",
+    "kind": "BOOSTERPACK",
+    "order": 7,
+    "cardCount": 306,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=209"
+  },
+  {
+    "id": "211",
+    "title": "BOOSTER PACK [BRAVE BEGINNING]",
+    "kind": "BOOSTERPACK",
+    "order": 8,
+    "cardCount": 203,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=211"
+  },
+  {
+    "id": "214",
+    "title": "Starter Deck RED",
+    "kind": "STARTERDECK",
+    "order": 9,
+    "cardCount": 22,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=214"
+  },
+  {
+    "id": "215",
+    "title": "Starter Deck YELLOW",
+    "kind": "STARTERDECK",
+    "order": 10,
+    "cardCount": 20,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=215"
+  },
+  {
+    "id": "216",
+    "title": "Starter Deck GREEN",
+    "kind": "STARTERDECK",
+    "order": 11,
+    "cardCount": 22,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=216"
+  },
+  {
+    "id": "212",
+    "title": "Starter Deck BLUE",
+    "kind": "STARTERDECK",
+    "order": 12,
+    "cardCount": 22,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=212"
+  },
+  {
+    "id": "213",
+    "title": "Starter Deck PURPLE",
+    "kind": "STARTERDECK",
+    "order": 13,
+    "cardCount": 22,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=213"
+  },
+  {
+    "id": "255",
+    "title": "Flames of Immortality",
+    "kind": "STARTERDECK",
+    "order": 14,
+    "cardCount": 20,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=255"
+  },
+  {
+    "id": "254",
+    "title": "Tree of Life",
+    "kind": "STARTERDECK",
+    "order": 15,
+    "cardCount": 20,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=254"
+  },
+  {
+    "id": "253",
+    "title": "Guardian Winds",
+    "kind": "STARTERDECK",
+    "order": 16,
+    "cardCount": 20,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=253"
+  },
+  {
+    "id": "252",
+    "title": "Seas of Fate",
+    "kind": "STARTERDECK",
+    "order": 17,
+    "cardCount": 20,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=252"
+  },
+  {
+    "id": "251",
+    "title": "Glorious Moonlight",
+    "kind": "STARTERDECK",
+    "order": 18,
+    "cardCount": 20,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=251"
+  },
+  {
+    "id": "99",
+    "title": "PROMOTION CARD",
+    "kind": "OTHER",
+    "order": 19,
+    "cardCount": 265,
+    "officialUrl": "https://cookierunbraverse.com/asia/product/detail?id=99"
+  }
+]

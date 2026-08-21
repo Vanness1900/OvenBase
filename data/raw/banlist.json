@@ -1,0 +1,25 @@
+{
+  "source": "https://cookierunbraverse.com/asia/notice/detail?id=1380",
+  "title": "[ASIA] Banned & Restricted Policy (13 Feb 2026 Updated)",
+  "effective": "2026-02-13",
+  "banned": [
+    { "id": "BS6-064", "name": "Broken Central Clock" },
+    { "id": "BS3-042", "name": "Golden Cheese Guardian Golem" },
+    { "id": "P-030", "name": "Sherbet Cookie" },
+    { "id": "BS4-040", "name": "Essence of Rejuvenation" },
+    { "id": "BS1-049", "name": "Tropical Slushie" }
+  ],
+  "restricted": [
+    { "id": "BS2-003", "name": "Rebel Cookie" },
+    { "id": "BS8-069", "name": "Peak of Apathy" },
+    { "id": "BS8-072", "name": "Soul Jam: Light of Apathy" },
+    { "id": "BS4-026", "name": "Stormbringer Cookie" },
+    { "id": "BS3-013", "name": "Tiger Lily Cookie" },
+    { "id": "BS3-111", "name": "Crunchy Chip Cookie" },
+    { "id": "BS01-007", "name": "Melon Bun Cookie" },
+    { "id": "BS01-032", "name": "Banana Cookie" },
+    { "id": "BS01-057", "name": "Bellflower Cookie" },
+    { "id": "BS02-035", "name": "Salt Cookie" },
+    { "id": "BS02-053", "name": "Ninja Cookie" }
+  ]
+}
